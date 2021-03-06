@@ -13,6 +13,7 @@
                                 <th scope="col">Description</th>
                                 <th scope="col">Qty</th>
                                 <th scope="col">Price</th>
+                                <th scope="col">Action</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -20,10 +21,18 @@
                             <tr>
                                 <th scope="row">{{$loop->iteration}}</th>
                                 <td>{{$item->name}}</td>
-                                <td><img width="50%" src="{{asset('storage/images/'.$item->image)}}" alt="" srcset=""></td>
+                                <td><img width="50%" src="{{asset('storage/images/'.$item->image)}}" alt="" srcset="">
+                                </td>
                                 <td>{{$item->description}}</td>
                                 <td>{{$item->qty}}</td>
                                 <td>{{$item->price}}</td>
+                                <td>
+                                    <div x-data="deleteData()">
+                                        <button class="btn btn-dark btn-sm p-2 delete"
+                                            x-on:click="open('{{$item->id}}')" data-id="{{$item->id}}"><i
+                                                class="fas fa-trash"></i></button>
+                                    </div>
+                                </td>
                             </tr>
                             @endforeach
                         </tbody>
@@ -46,7 +55,8 @@
                         <div class="form-group">
                             <label for="product_image">Product Image</label>
                             <div class="custom-file">
-                                <input type="file" wire:model="image" placeholder="Choose Image" class="custom-file-input" id="customFile">
+                                <input type="file" wire:model="image" placeholder="Choose Image"
+                                    class="custom-file-input" id="customFile">
                                 <label for="customFile" class="custom-file-label"></label>
                                 @error('image')
                                 <small class="text-danger">{{$message}}</small>
@@ -87,3 +97,37 @@
         </div>
     </div>
 </div>
+
+@section('script')
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
+<script>
+    function deleteData()
+    {
+       return {
+           open(id){
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, delete it!'
+                }).then((result) => {
+                if (result.isConfirmed) {
+                    this.$wire.destroy(id).then(res=>{
+                        Swal.fire(
+                        'Deleted!',
+                        'Your file has been deleted.',
+                        'success'
+                        )
+                    })
+
+                }
+                })
+           }
+       }
+    }
+</script>
+@endsection

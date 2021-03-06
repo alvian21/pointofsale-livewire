@@ -12,6 +12,7 @@ class Product extends Component
     use WithFileUploads;
 
     public $name, $image, $description, $qty, $price;
+    public $deleteProduct = false;
 
     public function render()
     {
@@ -54,5 +55,10 @@ class Product extends Component
         $this->description = '';
         $this->qty = '';
         $this->price = '';
+    }
+
+    public function destroy($id)
+    {
+        $delete = ProductModel::find($id)->delete();
     }
 }

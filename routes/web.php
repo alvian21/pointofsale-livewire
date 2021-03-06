@@ -30,6 +30,7 @@ Route::group(['middleware' => 'guest'], function () {
 
 Route::group(['middleware' => ['auth']], function () {
     Route::get("/products", Product::class);
+    Route::delete("/products/{id}",Product::class);
     Route::get("/cart", Cart::class);
     Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
     Route::post('/logout', Logout::class)->name('logout');
